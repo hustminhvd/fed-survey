@@ -48,11 +48,18 @@ const checkAdminAuth = (req, res, next) => {
 };
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true, // Sử dụng SSL/TLS
   auth: {
-    user: emailAddress,
-    pass: emailPassword,
+    user: process.env.EMAIL_ADDRESS,
+    pass: process.env.EMAIL_PASSWORD,
   },
+  tls: {
+    // Không từ chối kết nối do chứng chỉ không khớp (giúp ổn định hơn trên server)
+    rejectUnauthorized: false 
+  },
+  connectionTimeout: 10000, // Tăng thời gian chờ lên 10 giây
 });
 
 app.post('/submit', async (req, res) => {
