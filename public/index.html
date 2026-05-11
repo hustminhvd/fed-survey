@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Khảo sát sinh viên</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Khảo sát cho sinh viên</h1>
+    <p>Nhập thông tin của bạn và trả lời các câu hỏi khảo sát.</p>
+
+    <form id="survey-form">
+      <label for="studentName">Họ và tên:</label>
+      <input type="text" id="studentName" name="studentName" required />
+
+      <label for="studentId">Mã số Sinh viên (MSSV):</label>
+      <input type="text" id="studentId" name="studentId" required />
+
+      <label for="studentEmail">Email nhận thông tin:</label>
+      <input type="email" id="studentEmail" name="studentEmail" required />
+
+      <label for="studentClass">Khóa:</label>
+      <select id="studentClass" name="studentClass" required>
+        <option value="">-- Chọn khóa --</option>
+        <option value="K64">K64</option>
+        <option value="K65">K65</option>
+        <option value="K66">K66</option>
+        <option value="K67">K67</option>
+        <option value="K68">K68</option>
+        <option value="K69">K69</option>
+        <option value="K70">K70</option>
+      </select>
+
+      <label for="expectations">Bạn mong muốn nhận lại được những gì từ dự án?</label>
+      <textarea id="expectations" name="expectations" rows="4" placeholder="Mô tả mong muốn của bạn..." required></textarea>
+
+      <button type="submit">Gửi đăng ký</button>
+    </form>
+
+    <div id="message" class="message"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

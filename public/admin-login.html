@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng nhập quản trị</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-container {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .login-header h1 {
+      color: #316dfa;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .login-header p {
+      color: #6c757d;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+
+    input[type="password"]:focus {
+      outline: none;
+      border-color: #316dfa;
+      box-shadow: 0 0 0 3px rgba(49, 109, 250, 0.1);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .message {
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      display: none;
+      font-size: 14px;
+    }
+
+    .message.error {
+      background: #fde7e7;
+      color: #842029;
+      display: block;
+    }
+
+    .message.success {
+      background: #e7f7e8;
+      color: #225f26;
+      display: block;
+    }
+
+    .footer-text {
+      text-align: center;
+      color: #6c757d;
+      font-size: 12px;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-header">
+      <h1>🔐 Quản trị</h1>
+      <p>Nhập mật khẩu để truy cập trang quản trị</p>
+    </div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label for="password">Mật khẩu:</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          placeholder="Nhập mật khẩu" 
+          required 
+          autofocus
+        />
+      </div>
+      <button type="submit" class="login-btn">Đăng nhập</button>
+    </form>
+
+    <div id="message" class="message"></div>
+
+    <div class="footer-text">
+      Ứng dụng quản lý khảo sát sinh viên
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('login-form');
+    const message = document.getElementById('message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      message.className = 'message';
+      message.textContent = '';
+
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('/admin-login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ password }),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          message.classList.add('success');
+          message.textContent = result.message;
+          setTimeout(() => {
+            window.location.href = '/admin';
+          }, 500);
+        } else {
+          message.classList.add('error');
+          message.textContent = result.message;
+          document.getElementById('password').value = '';
+        }
+      } catch (error) {
+        message.classList.add('error');
+        message.textContent = 'Lỗi kết nối. Vui lòng thử lại.';
+      }
+    });
+  </script>
+</body>
+</html>
