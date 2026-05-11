@@ -49,17 +49,19 @@ const checkAdminAuth = (req, res, next) => {
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
-  port: 465,
-  secure: true, // Sử dụng SSL/TLS
+  port: 587,
+  secure: false, // Phải là false cho cổng 587
   auth: {
     user: process.env.EMAIL_ADDRESS,
     pass: process.env.EMAIL_PASSWORD,
   },
   tls: {
-    // Không từ chối kết nối do chứng chỉ không khớp (giúp ổn định hơn trên server)
+    // STARTTLS yêu cầu cấu hình này để đảm bảo an toàn
+    ciphers: 'SSLv3',
     rejectUnauthorized: false 
   },
-  connectionTimeout: 10000, // Tăng thời gian chờ lên 10 giây
+  connectionTimeout: 20000, // Tăng lên 20 giây cho chắc chắn
+  greetingTimeout: 10000,
 });
 
 app.post('/submit', async (req, res) => {
