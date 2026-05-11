@@ -9,8 +9,8 @@ form.addEventListener('submit', async (event) => {
   const studentName = document.getElementById('studentName').value.trim();
   const studentId = document.getElementById('studentId').value.trim();
   const studentEmail = document.getElementById('studentEmail').value.trim();
+  const studentMajor = document.getElementById('studentMajor').value;
   const studentClass = document.getElementById('studentClass').value;
-  const expectations = document.getElementById('expectations').value.trim();
 
   try {
     const response = await fetch('/submit', {
@@ -22,8 +22,8 @@ form.addEventListener('submit', async (event) => {
         studentName,
         studentId,
         studentEmail,
+        studentMajor,
         studentClass,
-        expectations,
       }),
     });
 

@@ -65,10 +65,31 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post('/submit', async (req, res) => {
-  const { studentName, studentId, studentEmail, studentClass, expectations } = req.body;
+  const {
+    studentName,
+    studentId,
+    studentEmail,
+    studentMajor,
+    studentClass,
+    major,
+    class: className,
+  } = req.body;
 
-  if (!studentName || !studentId || !studentEmail || !studentClass || !expectations) {
-    return res.status(400).json({ success: false, message: 'Vui lòng nhập đầy đủ thông tin.' });
+  const chosenMajor = studentMajor || major;
+  const chosenClass = studentClass || className;
+
+  const missingFields = [];
+  if (!studentName) missingFields.push('Họ và tên');
+  if (!studentId) missingFields.push('Mã số sinh viên');
+  if (!studentEmail) missingFields.push('Email');
+  if (!chosenMajor) missingFields.push('Ngành');
+  if (!chosenClass) missingFields.push('Lớp');
+
+  if (missingFields.length > 0) {
+    return res.status(400).json({
+      success: false,
+      message: `Vui lòng nhập đầy đủ thông tin. Thiếu: ${missingFields.join(', ')}.`,
+    });
   }
 
   // Validate email format
@@ -94,8 +115,8 @@ app.post('/submit', async (req, res) => {
     studentName,
     studentId,
     studentEmail,
-    studentClass,
-    expectations,
+    studentMajor: chosenMajor,
+    studentClass: chosenClass,
     rewardCode,
     submittedAt: new Date().toISOString(),
   };
@@ -110,7 +131,7 @@ app.post('/submit', async (req, res) => {
       from: emailAddress,
       to: studentEmail, // Gửi về email của sinh viên
       subject: 'Xác nhận đăng ký khảo sát thành công',
-      text: `Chào ${studentName},\n\nCảm ơn bạn đã đăng ký tham gia khảo sát của chúng tôi!\n\nThông tin đăng ký:\n- Họ tên: ${studentName}\n- MSSV: ${studentId}\n- Email: ${studentEmail}\n- Khóa: ${studentClass}\n- Mong muốn: ${expectations}\n\nMã dự thưởng của bạn: ${rewardCode}\n\nChúng tôi sẽ liên hệ với bạn sớm. Chúc bạn may mắn!\n\nTrân trọng,\nĐội khảo sát`,
+      text: `Chào ${studentName},\n\nCảm ơn bạn đã đăng ký tham gia khảo sát của chúng tôi!\n\nThông tin đăng ký:\n- Họ tên: ${studentName}\n- MSSV: ${studentId}\n- Email: ${studentEmail}\n- Ngành: ${chosenMajor}\n- Lớp: ${chosenClass}\n\nMã dự thưởng của bạn: ${rewardCode}\n\nChúng tôi sẽ liên hệ với bạn sớm. Chúc bạn may mắn!\n\nTrân trọng,\nĐội khảo sát`,
       html: `
         <html>
           <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto;">
@@ -136,12 +157,12 @@ app.post('/submit', async (req, res) => {
                   <td style="padding: 8px 0;">${studentEmail}</td>
                 </tr>
                 <tr style="background: #fff;">
-                  <td style="padding: 8px 0; font-weight: bold;">Khóa:</td>
-                  <td style="padding: 8px 0;">${studentClass}</td>
+                  <td style="padding: 8px 0; font-weight: bold;">Ngành:</td>
+                  <td style="padding: 8px 0;">${chosenMajor}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 8px 0; font-weight: bold;">Mong muốn:</td>
-                  <td style="padding: 8px 0;">${expectations.replace(/\n/g, '<br/>')}</td>
+                  <td style="padding: 8px 0; font-weight: bold;">Lớp:</td>
+                  <td style="padding: 8px 0;">${chosenClass}</td>
                 </tr>
               </table>
 
@@ -237,9 +258,9 @@ app.get('/download-excel', checkAdminAuth, async (req, res) => {
       { header: 'Họ và tên', key: 'name', width: 20 },
       { header: 'MSSV', key: 'id', width: 15 },
       { header: 'Email', key: 'email', width: 25 },
-      { header: 'Khóa', key: 'class', width: 10 },
+      { header: 'Ngành', key: 'major', width: 20 },
+      { header: 'Lớp', key: 'class', width: 12 },
       { header: 'Mã dự thưởng', key: 'reward', width: 15 },
-      { header: 'Mong muốn', key: 'expectations', width: 40 },
       { header: 'Thời gian đăng ký', key: 'time', width: 20 },
     ];
 
@@ -250,9 +271,9 @@ app.get('/download-excel', checkAdminAuth, async (req, res) => {
         name: submission.studentName,
         id: submission.studentId,
         email: submission.studentEmail,
+        major: submission.studentMajor || submission.major || '',
         class: submission.studentClass,
         reward: submission.rewardCode || 'N/A',
-        expectations: submission.expectations,
         time: new Date(submission.submittedAt).toLocaleString('vi-VN'),
       });
     });

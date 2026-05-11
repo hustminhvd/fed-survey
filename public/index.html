@@ -21,20 +21,15 @@
       <label for="studentEmail">Email nhận thông tin:</label>
       <input type="email" id="studentEmail" name="studentEmail" required />
 
-      <label for="studentClass">Khóa:</label>
-      <select id="studentClass" name="studentClass" required>
-        <option value="">-- Chọn khóa --</option>
-        <option value="K64">K64</option>
-        <option value="K65">K65</option>
-        <option value="K66">K66</option>
-        <option value="K67">K67</option>
-        <option value="K68">K68</option>
-        <option value="K69">K69</option>
-        <option value="K70">K70</option>
+      <label for="studentMajor">Ngành:</label>
+      <select id="studentMajor" name="studentMajor" required>
+        <option value="">-- Chọn ngành --</option>
+        <option value="Công nghệ giáo dục">Công nghệ giáo dục</option>
+        <option value="Quản lý giáo dục">Quản lý giáo dục</option>
       </select>
 
-      <label for="expectations">Bạn mong muốn nhận lại được những gì từ dự án?</label>
-      <textarea id="expectations" name="expectations" rows="4" placeholder="Mô tả mong muốn của bạn..." required></textarea>
+      <label for="studentClass">Lớp:</label>
+      <input type="text" id="studentClass" name="studentClass" required placeholder="Nhập lớp của bạn" />
 
       <button type="submit">Gửi đăng ký</button>
     </form>

@@ -179,14 +179,13 @@
                 <span class="detail-label">Email:</span> ${submission.studentEmail}
               </div>
               <div class="detail-item">
-                <span class="detail-label">Khóa:</span> ${submission.studentClass}
+                <span class="detail-label">Ngành:</span> ${submission.studentMajor || submission.major || 'N/A'}
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Lớp:</span> ${submission.studentClass}
               </div>
               <div class="detail-item">
                 <span class="detail-label">Mã dự thưởng:</span> <strong style="color: #316dfa;">${submission.rewardCode || 'N/A'}</strong>
-              </div>
-              <div class="expectations-text">
-                <span class="detail-label">Mong muốn:</span><br/>
-                ${submission.expectations.replace(/\n/g, '<br/>')}
               </div>
             </div>
           </div>
